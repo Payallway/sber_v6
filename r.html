@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Перевод через СБП</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 40px; background: #f9f9f9; }
+    a.button {
+      display: inline-block;
+      margin-top: 30px;
+      font-size: 20px;
+      background: #4CAF50;
+      color: white;
+      padding: 15px 25px;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    .fallback { margin-top: 20px; color: #888; font-size: 14px; }
+  </style>
+  <script>
+    async function resolveLink() {
+      const token = new URLSearchParams(window.location.search).get('token');
+      if (!token) {
+        document.getElementById("content").innerHTML = "❌ Токен не указан";
+        return;
+      }
+      try {
+        const res = await fetch('tokens.json');
+        if (!res.ok) throw new Error("Не удалось загрузить tokens.json");
+        const tokens = await res.json();
+        const link = tokens[token];
+        if (!link) {
+          document.getElementById("content").innerHTML = "❌ Токен не найден.";
+          return;
+        }
+        document.getElementById("sbolLink").href = link;
+      } catch (e) {
+        document.getElementById("content").innerHTML = "❌ Ошибка: " + e.message;
+      }
+    }
+  </script>
+</head>
+<body onload="resolveLink()">
+  <div id="content">
+    <h2>Нажмите кнопку ниже для перевода</h2>
+    <a id="sbolLink" class="button" href="#">Открыть Сбербанк Онлайн</a>
+    <div class="fallback">Если не открылось — нажмите вручную</div>
+  </div>
+</body>
+</html>

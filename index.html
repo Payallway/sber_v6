@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Генератор QR-ссылки</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #f0f0f0; text-align: center; }
+    input, button { padding: 0.5em; font-size: 16px; margin: 0.3em; width: 300px; }
+    img { margin-top: 20px; border: 1px solid #ccc; padding: 10px; background: white; }
+  </style>
+</head>
+<body>
+  <h2>Генератор QR-ссылки</h2>
+  <input id="token" placeholder="Введите токен (например: test1)" />
+  <button onclick="generate()">Создать QR</button>
+  <p id="link"></p>
+  <div id="qr"></div>
+  <script>
+    function generate() {
+      const token = document.getElementById("token").value.trim();
+      if (!token) {
+        alert("Введите токен");
+        return;
+      }
+      const path = window.location.origin + window.location.pathname.replace("index.html", "") + "r.html?token=" + token;
+      document.getElementById("link").innerHTML = `<a href="${path}" target="_blank">${path}</a>`;
+      document.getElementById("qr").innerHTML =
+        `<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(path)}" alt="QR Code">`;
+    }
+  </script>
+</body>
+</html>
